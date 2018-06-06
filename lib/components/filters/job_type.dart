@@ -27,7 +27,7 @@ class JobType extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 80.0,
+              height: 85.0,
               child: new ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: _labels.length,

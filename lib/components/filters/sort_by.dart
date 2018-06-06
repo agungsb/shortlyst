@@ -7,21 +7,22 @@ class SortBy extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            new Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Sort by',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-              ),
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          new Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Sort by',
+              textAlign: TextAlign.left,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
             ),
-            SelectableRow('Highest Match Percentage'),
-            SelectableRow('Most recent'),
-          ],
-        ));
+          ),
+          SelectableRow('Highest Match Percentage'),
+          SelectableRow('Most recent'),
+        ],
+      ),
+    );
   }
 }

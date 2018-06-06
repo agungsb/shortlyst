@@ -64,6 +64,7 @@ class _SelectableLabelState extends State<SelectableLabel>
   @override
   void dispose() {
     // TODO: implement dispose
+    _itemController.dispose();
     _iconController.dispose();
     _borderController.dispose();
     super.dispose();
@@ -72,56 +73,53 @@ class _SelectableLabelState extends State<SelectableLabel>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return GestureDetector(
-      child: new Container(
-        height: 80.0,
-        child: Center(
-          child: Stack(
-            overflow: Overflow.visible,
-            children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  _itemController.forward();
-                  if (!checked) {
-                    _borderController.forward();
-                    _iconController.forward();
-                  } else {
-                    _borderController.reverse();
-                    _iconController.reverse();
-                  }
-                  checked = !checked;
-                },
-                child: ScaleTransition(
-                  scale: _itemAnimation,
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 100),
-                    padding: EdgeInsets.all(20.0),
-                    margin: EdgeInsets.only(right: 10.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: _borderAnimation.value),
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    ),
-                    child: Text(
-                      widget.text,
-                      textAlign: TextAlign.left,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: 14.0, color: _borderAnimation.value),
-                    ),
+    return Container(
+      height: 80.0,
+      child: Center(
+        child: Stack(
+          overflow: Overflow.visible,
+          children: <Widget>[
+            GestureDetector(
+              onTap: () {
+                _itemController.forward();
+                if (!checked) {
+                  _borderController.forward();
+                  _iconController.forward();
+                } else {
+                  _borderController.reverse();
+                  _iconController.reverse();
+                }
+                checked = !checked;
+              },
+              child: ScaleTransition(
+                scale: _itemAnimation,
+                child: Container(
+                  padding: EdgeInsets.all(20.0),
+                  margin: EdgeInsets.only(right: 10.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: _borderAnimation.value),
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  ),
+                  child: Text(
+                    widget.text,
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 14.0, color: _borderAnimation.value),
                   ),
                 ),
               ),
-              Positioned(
-                top: -15.0,
-                right: 0.0,
-                child: FadeTransition(
-                  opacity: _iconAnimation,
-                  child:
-                      Icon(Icons.check_circle, color: CupertinoColors.activeBlue),
-                ),
+            ),
+            Positioned(
+              top: -15.0,
+              right: 0.0,
+              child: FadeTransition(
+                opacity: _iconAnimation,
+                child:
+                    Icon(Icons.check_circle, color: CupertinoColors.activeBlue),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

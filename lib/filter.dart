@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shortlyst/components/filters/company.dart';
 import 'package:shortlyst/components/filters/company_tier.dart';
 import 'package:shortlyst/components/filters/date_posted.dart';
+import 'package:shortlyst/components/filters/experience_level.dart';
+import 'package:shortlyst/components/filters/industry.dart';
+import 'package:shortlyst/components/filters/job_function.dart';
 import 'package:shortlyst/components/filters/job_type.dart';
 import 'package:shortlyst/components/filters/sort_by.dart';
 
@@ -53,7 +57,11 @@ class _FilterState extends State<Filter> {
         children: <Widget>[
           SortBy(),
           DatePosted(),
+          Company(),
+          ExperienceLevel(),
           JobType(),
+          Industry(),
+          JobFunction(),
           CompanyTier(),
           Container(
             margin: EdgeInsets.only(top: 20.0),
