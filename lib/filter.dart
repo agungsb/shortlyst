@@ -8,6 +8,7 @@ import 'package:shortlyst/components/filters/industry.dart';
 import 'package:shortlyst/components/filters/job_function.dart';
 import 'package:shortlyst/components/filters/job_type.dart';
 import 'package:shortlyst/components/filters/sort_by.dart';
+import 'package:shortlyst/models/company_model.dart';
 
 class Filter extends StatefulWidget {
   @override
@@ -15,6 +16,29 @@ class Filter extends StatefulWidget {
 }
 
 class _FilterState extends State<Filter> {
+
+  List<CompanyModel> _companies = [];
+
+  _updateSelectedCompanies(companies) {
+    setState(() {
+      _companies = companies;
+    });
+  }
+
+  _removeCompany(company, index) {
+    setState(() {
+      _companies.removeWhere((c) {
+        return c.name == company.name;
+      });
+    });
+  }
+
+  resetForm() {
+    setState(() {
+      _companies.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark
@@ -41,12 +65,13 @@ class _FilterState extends State<Filter> {
         ),
         actions: <Widget>[
           GestureDetector(
+            onTap: resetForm,
             child: new Center(
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Text(
                   'Reset',
-                  style: TextStyle(fontSize: 18.0, color: Colors.grey.shade500),
+                  style: TextStyle(fontSize: 18.0, color: Colors.red.shade500),
                 ),
               ),
             ),
@@ -57,7 +82,7 @@ class _FilterState extends State<Filter> {
         children: <Widget>[
           SortBy(),
           DatePosted(),
-          Company(),
+          Company(_companies, _removeCompany, _updateSelectedCompanies),
           ExperienceLevel(),
           JobType(),
           Industry(),

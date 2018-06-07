@@ -6,18 +6,15 @@ import 'package:shortlyst/components/add_label.dart';
 import 'package:shortlyst/components/removable_label.dart';
 
 class Company extends StatefulWidget {
+  final List<CompanyModel> _companies;
+  final Function(CompanyModel, int) _removeCompany;
+  final Function(List<CompanyModel>) _updateSelectedCompanies;
+  Company(this._companies, this._removeCompany, this._updateSelectedCompanies);
   @override
   _CompanyState createState() => _CompanyState();
 }
 
 class _CompanyState extends State<Company> {
-  List<CompanyModel> _companies = [];
-
-  _updateSelectedCompanies(companies) {
-    setState(() {
-      _companies = companies;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +30,11 @@ class _CompanyState extends State<Company> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
           ),
         ),
-        _companies.length == 0
+        widget._companies.length == 0
             ? AddLabel('Add company filter', () {
                 Navigator.of(context).push(CupertinoPageRoute<void>(
                       builder: (BuildContext context) =>
-                          SearchCompany(_companies, _updateSelectedCompanies),
+                          SearchCompany(widget._companies, widget._updateSelectedCompanies),
                     ));
               })
             : Column(
@@ -46,14 +43,14 @@ class _CompanyState extends State<Company> {
                     height: 40.0,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: (_companies.length + 1),
+                      itemCount: (widget._companies.length + 1),
                       itemBuilder: (BuildContext context, int index) {
                         //return your list
                         if (index == 0) {
                           return Container(width: 20.0);
                         }
                         return RemovableLabel(
-                            _companies[index - 1], index - 1, () {});
+                            widget._companies[index - 1], index - 1, widget._removeCompany);
                       },
                     ),
                   ),
@@ -61,7 +58,7 @@ class _CompanyState extends State<Company> {
                     onTap: () {
                       Navigator.of(context).push(CupertinoPageRoute<void>(
                             builder: (BuildContext context) =>
-                                SearchCompany(_companies, _updateSelectedCompanies),
+                                SearchCompany(widget._companies, widget._updateSelectedCompanies),
                           ));
                     },
                     child: Padding(

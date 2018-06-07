@@ -16,7 +16,7 @@ class SearchCompany extends StatefulWidget {
 class _SearchCompanyState extends State<SearchCompany> {
   List<CompanyModel> _companies = Companies().getAll;
 
-  List<CompanyModel> _selectedCompanies = [];
+  List<CompanyModel> _selectedCompanies;
 
   TextEditingController _searchController;
 
@@ -151,22 +151,6 @@ class _SearchCompanyState extends State<SearchCompany> {
             ],
           ),
         ),
-        actions: <Widget>[
-          GestureDetector(
-            onTap: () {
-              widget._updateSelectedCompanies(_selectedCompanies);
-            },
-            child: Center(
-              child: new Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Done',
-                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
