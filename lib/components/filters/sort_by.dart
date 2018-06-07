@@ -3,6 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:shortlyst/components/selectable_row.dart';
 
 class SortBy extends StatelessWidget {
+  final int _selectedIndex;
+  final Function(int, String) _updateSelectedLabel;
+
+  SortBy(this._selectedIndex, this._updateSelectedLabel);
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -19,8 +24,10 @@ class SortBy extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
             ),
           ),
-          SelectableRow('Highest Match Percentage'),
-          SelectableRow('Most recent'),
+          SelectableRow('Highest Match Percentage', 0, _selectedIndex == 0,
+              _updateSelectedLabel),
+          SelectableRow(
+              'Most recent', 1, _selectedIndex == 1, _updateSelectedLabel),
         ],
       ),
     );

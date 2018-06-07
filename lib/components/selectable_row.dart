@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class SelectableRow extends StatefulWidget {
-  final String text;
+  final String _text;
+  final int _index;
+  final bool _checked;
+  final Function(int, String) _updateSelectedLabel;
 
-  SelectableRow(this.text);
+  SelectableRow(this._text, this._index, this._checked, this._updateSelectedLabel);
 
   @override
   _SelectableRowState createState() => _SelectableRowState();
@@ -15,8 +18,6 @@ class _SelectableRowState extends State<SelectableRow> with TickerProviderStateM
   AnimationController _iconController;
   Animation<double> _itemAnimation;
   Animation<double> _iconAnimation;
-
-  bool checked = false;
 
   @override
   void initState() {
@@ -45,6 +46,21 @@ class _SelectableRowState extends State<SelectableRow> with TickerProviderStateM
       parent: _iconController,
       curve: Interval(0.0, 1.0, curve: Curves.bounceOut),
     ));
+    if (widget._checked) {
+      _iconController.forward();
+      _itemController.forward();
+    }
+  }
+
+  @override
+  void didUpdateWidget(SelectableRow oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    if (!widget._checked) {
+      _iconController.reverse();
+    } else {
+      _iconController.forward();
+    }
   }
 
   @override
@@ -61,12 +77,12 @@ class _SelectableRowState extends State<SelectableRow> with TickerProviderStateM
     return GestureDetector(
       onTap: () {
         _itemController.forward();
-        if (checked) {
+        if (widget._checked) {
           _iconController.reverse();
         } else {
           _iconController.forward();
         }
-        checked = !checked;
+        widget._updateSelectedLabel(widget._index, 'sortby');
       },
       child: new Padding(
         padding: const EdgeInsets.all(8.0),
@@ -77,7 +93,7 @@ class _SelectableRowState extends State<SelectableRow> with TickerProviderStateM
               child: new ScaleTransition(
                 scale: _itemAnimation,
                 child: Text(
-                  widget.text,
+                  widget._text,
                   textAlign: TextAlign.left,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 14.0),

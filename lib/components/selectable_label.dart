@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class SelectableLabel extends StatefulWidget {
-  final String text;
+  final String _text;
+  final int _index;
+  final bool _checked;
+  final Function(int, String) _updateSelectedLabel;
+  final String _type;
 
-  SelectableLabel(this.text);
+  SelectableLabel(this._text, this._index, this._checked, this._updateSelectedLabel, this._type);
 
   @override
   _SelectableLabelState createState() => _SelectableLabelState();
@@ -18,8 +22,6 @@ class _SelectableLabelState extends State<SelectableLabel>
   Animation<double> _itemAnimation;
   Animation<Color> _borderAnimation;
   Animation<double> _iconAnimation;
-
-  bool checked = false;
 
   @override
   void initState() {
@@ -59,6 +61,23 @@ class _SelectableLabelState extends State<SelectableLabel>
       parent: _iconController,
       curve: Interval(0.0, 1.0, curve: Curves.bounceOut),
     ));
+    if (widget._checked) {
+      _borderController.forward();
+      _iconController.forward();
+    }
+  }
+
+  @override
+  void didUpdateWidget(SelectableLabel oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    if (!widget._checked) {
+      _borderController.reverse();
+      _iconController.reverse();
+    } else {
+      _borderController.forward();
+      _iconController.forward();
+    }
   }
 
   @override
@@ -82,14 +101,14 @@ class _SelectableLabelState extends State<SelectableLabel>
             GestureDetector(
               onTap: () {
                 _itemController.forward();
-                if (!checked) {
+                if (!widget._checked) {
                   _borderController.forward();
                   _iconController.forward();
                 } else {
                   _borderController.reverse();
                   _iconController.reverse();
                 }
-                checked = !checked;
+                widget._updateSelectedLabel(widget._index, widget._type);
               },
               child: ScaleTransition(
                 scale: _itemAnimation,
@@ -101,7 +120,7 @@ class _SelectableLabelState extends State<SelectableLabel>
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
                   child: Text(
-                    widget.text,
+                    widget._text,
                     textAlign: TextAlign.left,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(

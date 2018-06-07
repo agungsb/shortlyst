@@ -23,3 +23,10 @@ class Companies {
     CompanyModel('Microsoft'),
   ];
 }
+
+class Label {
+  static final String COMPANY_TIER = 'companytier';
+  static final String DATE_POSTED = 'dateposted';
+  static final String JOB_TYPE = 'jobtype';
+  static final String SORT_BY = 'sortby';
+}

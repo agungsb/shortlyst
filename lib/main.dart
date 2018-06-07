@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark
-        .copyWith(statusBarIconBrightness: Brightness.light));
+        .copyWith(statusBarIconBrightness: Brightness.dark));
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Shortlyst',

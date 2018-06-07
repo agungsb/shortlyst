@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shortlyst/components/selectable_label.dart';
+import 'package:shortlyst/data_dummy.dart';
 
 class DatePosted extends StatelessWidget {
   final _labels = [
@@ -9,6 +10,11 @@ class DatePosted extends StatelessWidget {
     'Past week',
     'Past month',
   ];
+
+  final int _selectedIndex;
+  final Function(int, String) _updateSelectedLabel;
+
+  DatePosted(this._selectedIndex, this._updateSelectedLabel);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +40,8 @@ class DatePosted extends StatelessWidget {
               if (index == 0) {
                 return Container(width: 20.0);
               }
-              return SelectableLabel(_labels[index]);
+              return SelectableLabel(
+                  _labels[index], (index-1), _selectedIndex == (index - 1), _updateSelectedLabel, Label.DATE_POSTED);
             },
           ),
         ),

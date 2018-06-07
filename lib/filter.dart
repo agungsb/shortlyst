@@ -9,15 +9,42 @@ import 'package:shortlyst/components/filters/job_function.dart';
 import 'package:shortlyst/components/filters/job_type.dart';
 import 'package:shortlyst/components/filters/sort_by.dart';
 import 'package:shortlyst/models/company_model.dart';
+import 'package:shortlyst/data_dummy.dart';
 
 class Filter extends StatefulWidget {
   @override
   _FilterState createState() => _FilterState();
 }
 
-class _FilterState extends State<Filter> {
+// 088965389430
 
+class _FilterState extends State<Filter> {
+  int _sortby = 0;
+  int _dateposted = 0;
   List<CompanyModel> _companies = [];
+  double _experiencelevel = 0.0;
+  int _jobtype = 0;
+  int _companytier = 0;
+
+  _updateExperienceLevel(double value) {
+    setState(() {
+      _experiencelevel = value;
+    });
+  }
+
+  _updateSelectedLabel(int index, String type) {
+    setState((){
+      if (type == Label.COMPANY_TIER) {
+        _companytier = index;
+      } else if (type == Label.DATE_POSTED) {
+        _dateposted = index;
+      } else if (type == Label.JOB_TYPE) {
+        _jobtype = index;
+      } else {
+        _sortby = index;
+      }
+    });
+  }
 
   _updateSelectedCompanies(companies) {
     setState(() {
@@ -36,13 +63,16 @@ class _FilterState extends State<Filter> {
   resetForm() {
     setState(() {
       _companies.clear();
+      _experiencelevel = 0.0;
+      _sortby = 0;
+      _dateposted = 0;
+      _jobtype = 0;
+      _companytier = 0;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark
-        .copyWith(statusBarIconBrightness: Brightness.light));
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
@@ -80,14 +110,14 @@ class _FilterState extends State<Filter> {
       ),
       body: ListView(
         children: <Widget>[
-          SortBy(),
-          DatePosted(),
+          SortBy(_sortby, _updateSelectedLabel),
+          DatePosted(_dateposted, _updateSelectedLabel),
           Company(_companies, _removeCompany, _updateSelectedCompanies),
-          ExperienceLevel(),
-          JobType(),
+          ExperienceLevel(_experiencelevel, _updateExperienceLevel),
+          JobType(_jobtype, _updateSelectedLabel),
           Industry(),
           JobFunction(),
-          CompanyTier(),
+          CompanyTier(_companytier, _updateSelectedLabel),
           Container(
             margin: EdgeInsets.only(top: 20.0),
             child: Column(
@@ -96,7 +126,9 @@ class _FilterState extends State<Filter> {
                 Container(
                   padding: EdgeInsets.all(20.0),
                   child: RaisedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                     elevation: 4.0,
                     color: Colors.blue,
                     textColor: Colors.white,
@@ -105,7 +137,10 @@ class _FilterState extends State<Filter> {
                     ),
                     child: new Container(
                       width: double.infinity,
-                      child: Text('Apply Filter', textAlign: TextAlign.center,),
+                      child: Text(
+                        'Apply Filter',
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ),

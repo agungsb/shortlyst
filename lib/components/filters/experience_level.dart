@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 
-class ExperienceLevel extends StatefulWidget {
-  @override
-  _ExperienceLevelState createState() => _ExperienceLevelState();
-}
+class ExperienceLevel extends StatelessWidget {
+  final double _discreteValue;
+  final Function(double) _updateExperienceLevel;
 
-class _ExperienceLevelState extends State<ExperienceLevel> {
-  double _discreteValue = 1.0;
-  List<String> _labels = ['Any', 'Entry Level', 'Beginner Level', 'Mid Level', 'Senior Level'];
+  ExperienceLevel(this._discreteValue, this._updateExperienceLevel);
+
+  final List<String> _labels = [
+    'Any',
+    'Entry Level',
+    'Beginner Level',
+    'Mid Level',
+    'Senior Level'
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,9 +36,10 @@ class _ExperienceLevelState extends State<ExperienceLevel> {
             divisions: 4,
             label: '${_labels[_discreteValue.toInt()]}',
             onChanged: (double value) {
-              setState(() {
-                _discreteValue = value;
-              });
+              _updateExperienceLevel(value);
+//              setState(() {
+//                widget._discreteValue = value;
+//              });
             },
           )
         ],
