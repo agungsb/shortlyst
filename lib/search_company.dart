@@ -9,12 +9,10 @@ class SearchCompany extends StatefulWidget {
   _SearchCompanyState createState() => _SearchCompanyState();
 }
 
-
 class _SearchCompanyState extends State<SearchCompany> {
-
   List<CompanyModel> _companies = Companies().getAll;
 
-  List<CompanyModel> _selectedCompany = [];
+  List<CompanyModel> _selectedCompanies = [];
 
   TextEditingController _searchController;
 
@@ -24,26 +22,30 @@ class _SearchCompanyState extends State<SearchCompany> {
     });
   }
 
-  _submitSearch(String keyword) {
-    setState(() {
-      List<CompanyModel> _tempCompanies = _companies;
-      for (var i = 0; i < _tempCompanies.length; i++) {
-        CompanyModel company = _tempCompanies[i];
-        String pattern = keyword.toLowerCase();
-        if (pattern != '') {
-          if (company.name.toLowerCase().indexOf(pattern) > -1) {
-            _addCompany(company, i);
-            _removeCompany(company, i);
-          }
-        }
+  _resetCompanies() {
+    _companies.clear();
+    if (_selectedCompanies.length > 0) {
+      List<CompanyModel> _temp = Companies().getAll;
+      for(int i = 0; i < _selectedCompanies.length; i++) {
+        CompanyModel company = _selectedCompanies[i];
+        print('company: ' + company.name);
+        _temp.removeWhere((t) {
+          return t.name == company.name;
+        });
       }
-    });
+      _companies = _temp;
+    } else {
+      _companies = Companies().getAll;
+    }
   }
 
   _addCompany(CompanyModel company, int index) {
     setState(() {
-      _companies.removeAt(index);
-      _selectedCompany.add(company);
+      _companies.removeWhere((CompanyModel c) {
+        return c.name.toLowerCase() == company.name.toLowerCase();
+      });
+      _selectedCompanies.add(company);
+//      _resetCompanies();
     });
   }
 
@@ -53,7 +55,8 @@ class _SearchCompanyState extends State<SearchCompany> {
       _companies.sort(([a, b]) {
         return a.name.compareTo(b.name);
       });
-      _selectedCompany.removeAt(index);
+      _selectedCompanies.removeAt(index);
+//      _resetCompanies();
     });
   }
 
@@ -64,23 +67,17 @@ class _SearchCompanyState extends State<SearchCompany> {
     _searchController = TextEditingController(text: '')
       ..addListener(() {
         setState(() {
-          print('keyword: ' + _searchController.text);
-          print('[');
-          _companies = Companies().getAll;
           if (_searchController.text != '') {
             _companies.removeWhere((CompanyModel company) {
-              print('comparator: ' + company.name);
               bool res = company.name
                       .toLowerCase()
                       .indexOf(_searchController.text.toLowerCase()) <
                   0;
-              print('res' + res.toString());
               return res;
             });
           } else {
-            _companies = Companies().getAll;
+            _resetCompanies();
           }
-          print(']');
         });
       });
   }
@@ -131,7 +128,8 @@ class _SearchCompanyState extends State<SearchCompany> {
                   ),
                 ),
               ),
-              new GestureDetector(
+              _searchController.text != '' ?
+              GestureDetector(
                 onTap: _resetKeyword,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -143,7 +141,7 @@ class _SearchCompanyState extends State<SearchCompany> {
                     ),
                   ),
                 ),
-              ),
+              ) : Text(''),
             ],
           ),
         ),
@@ -152,7 +150,7 @@ class _SearchCompanyState extends State<SearchCompany> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          _selectedCompany.length > 0
+          _selectedCompanies.length > 0
               ? Padding(
                   padding: const EdgeInsets.only(
                       left: 20.0, right: 20.0, top: 20.0, bottom: 10.0),
@@ -166,18 +164,18 @@ class _SearchCompanyState extends State<SearchCompany> {
                   ),
                 )
               : Container(),
-          _selectedCompany.length > 0
+          _selectedCompanies.length > 0
               ? SizedBox(
                   height: 40.0,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: (_selectedCompany.length + 1),
+                    itemCount: (_selectedCompanies.length + 1),
                     itemBuilder: (BuildContext context, int index) {
                       //return your list
                       if (index == 0) {
                         return Container(width: 20.0);
                       }
-                      return _Selected(_selectedCompany[index - 1], index - 1,
+                      return _Selected(_selectedCompanies[index - 1], index - 1,
                           _removeCompany);
                     },
                   ))
@@ -195,11 +193,23 @@ class _SearchCompanyState extends State<SearchCompany> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
+            child: _companies.length > 0 ? ListView.builder(
               itemCount: _companies.length,
               itemBuilder: (BuildContext context, int index) {
                 return _Item(_companies[index], _addCompany, index);
               },
+            ) : Padding(
+              padding:
+              const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+              child: Text(
+                'No Result',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
             ),
           ),
         ],
