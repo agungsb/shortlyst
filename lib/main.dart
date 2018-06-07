@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -40,9 +43,24 @@ class _MainState extends State<Main> {
   bool _bottomSheetIsOpened = false;
   final List<ChatItemModel> _chats = chats;
   VoidCallback _showBottomSheetCallback;
-  ScrollController scrollController;
 
   bool _isLoading;
+
+  Duration timeout = const Duration(seconds: 3);
+  Duration ms = const Duration(milliseconds: 1);
+
+  startTimeout([int milliseconds]) {
+    print('start');
+    var duration = milliseconds == null ? timeout : ms * milliseconds;
+    return new Timer(duration, handleTimeout);
+  }
+
+  void handleTimeout() {  // callback function
+    setState((){
+      print('handled');
+      _isLoading = false;
+    });
+  }
 
   @override
   void initState() {
@@ -52,13 +70,7 @@ class _MainState extends State<Main> {
     ChatList = chats.map((c) {
       return ChatItem(c.text, c.type);
     }).toList();
-    scrollController = ScrollController()..addListener(() {});
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    scrollController.dispose();
+    startTimeout(1000);
   }
 
   void _showBottomSheet() {
@@ -99,32 +111,97 @@ class _MainState extends State<Main> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      body: Stack(
-        children: <Widget>[
-          Container(
-            child: ListView(
-              controller: scrollController,
-              children: <Widget>[
-                Container(width: double.infinity, height: 56.0),
-              ]
-                ..insertAll(1, ChatList)
-                ..insert(ChatList.length + 1, MockLoading())
-                ..insert(ChatList.length + 2, Vacancy()),
+      body: Container(
+        color: Colors.white,
+        child: Stack(
+          children: <Widget>[
+            CustomScrollView(
+              slivers: <Widget>[
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Container(width: double.infinity, height: 56.0),
+                    ],
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate(ChatList),
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      MockLoading(_isLoading),
+                    ],
+                  ),
+                ),
+                SliverAppBar(
+                  backgroundColor: Colors.white,
+                  elevation: 0.0,
+                  pinned: true,
+                  bottom: PreferredSize(
+                    preferredSize: Size.fromHeight(42.0),
+                    child: _isLoading ? Container() : Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: new Column(
+                        children: <Widget>[
+                          Text(
+                            'in Jakarta, Indonesia',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: ClipRect(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+                        child: Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          decoration: new BoxDecoration(
+                            color: Colors.grey.shade200.withOpacity(0.5),
+                          ),
+                        ),
+                      ),
+                    ),
+                    title: _isLoading ? Container() : Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'UX Designer',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    _isLoading ? [] : [
+                      Padding(padding: EdgeInsets.only(top: 60.0)),
+                      Vacancy(0),
+                      Vacancy(1),
+                      Vacancy(2),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ),
-          CustomAppBar(_showBottomSheetCallback),
-          FrostedOverlay(_bottomSheetIsOpened, _dismissBottomSheet),
-        ],
+            CustomAppBar(_showBottomSheetCallback),
+            FrostedOverlay(_bottomSheetIsOpened, _dismissBottomSheet),
+          ],
+        ),
       ),
     );
   }
 }
 
 class MockLoading extends StatelessWidget {
+  final bool _isLoading;
+  MockLoading(this._isLoading);
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Center(
+    return _isLoading ? Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 30.0,
@@ -146,6 +223,6 @@ class MockLoading extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ) : Container();
   }
 }

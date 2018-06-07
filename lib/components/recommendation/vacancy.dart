@@ -1,33 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
+const bg = [
+  'http://www.hhcid.com/web/sites/default/files/_MHP1124-%E7%B7%A8%E8%BC%AF_0.jpg',
+  'https://media.glassdoor.com/l/5d/a8/00/85/our-london-office-space.jpg',
+  'http://www.cquence.com.sg/img/paths/assets/images/showcase-images/grab/cc-grab-02.jpg/4164727edaa3eb4c7f878d4c453327f8.jpg',
+];
+
+const _logo = [
+  'http://1.bp.blogspot.com/_BrloiEvGMN4/TPilhr6NTWI/AAAAAAAABsw/s_FGf7NIRCM/s1600/adidas_logo.jpg',
+  'https://assets.entrepreneur.com/content/3x2/1300/1405612741-airbnb-why-new-logo.jpg',
+  'https://4.bp.blogspot.com/-9auPqdX2fMw/Wu3IRba1uAI/AAAAAAAAzjE/8yfpAd8vZkIpINnoGymwJUeW15UqXDwqwCLcBGAs/s1600/Grab.jpg',
+];
+
+const company = [
+  'adidas',
+  'airbnb',
+  'Grab',
+];
+
+const position = [
+  'UI/UX Designer',
+  'UX Researcher',
+  'UX Researcher',
+];
+
 class Vacancy extends StatelessWidget {
+  final int _index;
+  Vacancy(this._index);
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Center(
       child: Container(
-        child: Column(
-          children: <Widget>[
-            Padding(padding: EdgeInsets.only(top: 20.0)),
-            Text(
-              'UX Designer position in',
-              style: TextStyle(color: Colors.grey),
-            ),
-            Text(
-              'Jakarta, Indonesia',
-              style: TextStyle(color: Colors.grey),
-            ),
-            Padding(padding: EdgeInsets.only(top: 5.0)),
-            Text(
-              'Edit',
-              style: TextStyle(color: CupertinoColors.activeBlue),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: _Card(),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: _Card(_index),
         ),
       ),
     );
@@ -35,6 +43,8 @@ class Vacancy extends StatelessWidget {
 }
 
 class _Card extends StatelessWidget {
+  final int _index;
+  _Card(this._index);
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -47,7 +57,7 @@ class _Card extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          _CardHeader(),
+          _CardHeader(_index),
           _CardContent(),
           _CardFooter(),
         ],
@@ -57,6 +67,8 @@ class _Card extends StatelessWidget {
 }
 
 class _CardHeader extends StatelessWidget {
+  final int _index;
+  _CardHeader(this._index);
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -67,7 +79,7 @@ class _CardHeader extends StatelessWidget {
         image: DecorationImage(
           fit: BoxFit.fill,
           colorFilter: ColorFilter.mode(Colors.black, BlendMode.dstATop),
-          image: NetworkImage('https://placekitten.com/240/180'),
+          image: NetworkImage(bg[_index]),
         ),
       ),
       child: Stack(
@@ -104,7 +116,7 @@ class _CardHeader extends StatelessWidget {
                       image: DecorationImage(
                         fit: BoxFit.fill,
                         colorFilter: ColorFilter.mode(Colors.black, BlendMode.dstATop),
-                        image: NetworkImage('http://1.bp.blogspot.com/_BrloiEvGMN4/TPilhr6NTWI/AAAAAAAABsw/s_FGf7NIRCM/s1600/adidas_logo.jpg'),
+                        image: NetworkImage(_logo[_index]),
                       ),
                       borderRadius: new BorderRadius.circular(10.0),
                     ),
@@ -118,14 +130,14 @@ class _CardHeader extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Text(
-                            'UI/UX Designer',
+                            position[_index],
                             style: const TextStyle(
                               color: Colors.white,
                             ),
                           ),
                           const Padding(padding: const EdgeInsets.only(top: 6.0)),
                           new Text(
-                            'adidas - Jakarta, Indonesia',
+                            "${company[_index]} - Jakarta, Indonesia",
                             style: const TextStyle(
                               color: Colors.white,
                             ),
