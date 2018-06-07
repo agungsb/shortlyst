@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shortlyst/search_company.dart';
 import 'package:shortlyst/components/add_label.dart';
 
 class Company extends StatelessWidget {
@@ -18,7 +19,9 @@ class Company extends StatelessWidget {
       ),
     ),
     AddLabel('Add company filter', () {
-      Navigator.of(context).pop();
+      Navigator.of(context).push(CupertinoPageRoute<void>(
+        builder: (BuildContext context) => SearchCompany(),
+      ));
     }),
     Padding(padding: EdgeInsets.all(10.0)),
       ],

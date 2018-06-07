@@ -68,7 +68,7 @@ class _FilterState extends State<Filter> {
             child: Column(
               children: <Widget>[
                 Text('11 jobs found', style: TextStyle(color: Colors.grey)),
-                new Container(
+                Container(
                   padding: EdgeInsets.all(20.0),
                   child: RaisedButton(
                     onPressed: () {},
