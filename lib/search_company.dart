@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:shortlyst/data_dummy.dart';
+import 'package:shortlyst/components/removable_label.dart';
 import 'package:shortlyst/models/company_model.dart';
 
 class SearchCompany extends StatefulWidget {
+  final Function _updateSelectedCompanies;
+  final List<CompanyModel> _selectedCompanies;
+  SearchCompany(this._selectedCompanies, this._updateSelectedCompanies);
   @override
   _SearchCompanyState createState() => _SearchCompanyState();
 }
@@ -64,6 +68,8 @@ class _SearchCompanyState extends State<SearchCompany> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _selectedCompanies = widget._selectedCompanies;
+    _resetCompanies();
     _searchController = TextEditingController(text: '')
       ..addListener(() {
         setState(() {
@@ -145,15 +151,29 @@ class _SearchCompanyState extends State<SearchCompany> {
             ],
           ),
         ),
-        actions: <Widget>[],
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () {
+              widget._updateSelectedCompanies(_selectedCompanies);
+            },
+            child: Center(
+              child: new Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Done',
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           _selectedCompanies.length > 0
               ? Padding(
-                  padding: const EdgeInsets.only(
-                      left: 20.0, right: 20.0, top: 20.0, bottom: 10.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: Text(
                     'You can add more than one company',
                     textAlign: TextAlign.left,
@@ -175,14 +195,14 @@ class _SearchCompanyState extends State<SearchCompany> {
                       if (index == 0) {
                         return Container(width: 20.0);
                       }
-                      return _Selected(_selectedCompanies[index - 1], index - 1,
+                      return RemovableLabel(_selectedCompanies[index - 1], index - 1,
                           _removeCompany);
                     },
                   ))
               : Container(),
           Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                const EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0),
             child: Text(
               'Suggestion',
               textAlign: TextAlign.left,
@@ -253,42 +273,6 @@ class _Item extends StatelessWidget {
               onTap: () => add(company, index),
               child: Icon(Icons.add, size: 30.0, color: Colors.grey.shade400)),
         ],
-      ),
-    );
-  }
-}
-
-class _Selected extends StatelessWidget {
-  final CompanyModel company;
-  final int index;
-  final Function remove;
-
-  _Selected(this.company, this.index, this.remove);
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Container(
-      margin: EdgeInsets.only(right: 10.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade400),
-        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            GestureDetector(
-              onTap: () => remove(company, index),
-              child: Icon(
-                Icons.close,
-                size: 18.0,
-              ),
-            ),
-            Text(company.name),
-          ],
-        ),
       ),
     );
   }
