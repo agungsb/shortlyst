@@ -1,6 +1,6 @@
 # shortlyst
 
-Shortlyst coding test
+Shortlyst application with Flutter
 
 ## Getting Started
 
