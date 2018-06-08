@@ -247,7 +247,12 @@ class _Item extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.grey.shade400,
                   shape: BoxShape.rectangle,
+                  border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  image: DecorationImage(
+                    fit: BoxFit.fill,
+                    image: NetworkImage(company.thumb),
+                  ),
                 ),
               ),
               Text(company.name, style: TextStyle(fontSize: 18.0)),
