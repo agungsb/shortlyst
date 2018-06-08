@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:shortlyst/components/custom_app_bar.dart';
 import 'package:shortlyst/components/custom_bottom_sheet.dart';
 import 'package:shortlyst/components/frosted_overlay.dart';
 import 'package:shortlyst/components/chat_item.dart';
@@ -55,8 +54,9 @@ class _MainState extends State<Main> {
     return new Timer(duration, handleTimeout);
   }
 
-  void handleTimeout() {  // callback function
-    setState((){
+  void handleTimeout() {
+    // callback function
+    setState(() {
       print('handled');
       _isLoading = false;
     });
@@ -112,16 +112,77 @@ class _MainState extends State<Main> {
     return Scaffold(
       key: _scaffoldKey,
       body: Container(
-        color: Colors.white,
+        color: Colors.grey.shade50,
         child: Stack(
           children: <Widget>[
             CustomScrollView(
               slivers: <Widget>[
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      Container(width: double.infinity, height: 56.0),
-                    ],
+                SliverAppBar(
+                  automaticallyImplyLeading: false,
+                  pinned: true,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0.0,
+                  leading: Container(
+                    padding: EdgeInsets.only(left: 10.0, top: 0.0),
+                    child: new Container(
+                      child: Icon(Icons.chevron_left, color: Colors.grey),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black,
+                            blurRadius: 0.3,
+                          ),
+                        ],
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                  title: Container(
+                    padding: EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Sandra ',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: ' from Shortlyst',
+                            style: TextStyle(fontWeight: FontWeight.normal),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  actions: <Widget>[
+                    GestureDetector(
+                      onTap: _showBottomSheetCallback,
+                      child: Container(
+                        padding: EdgeInsets.only(right: 10.0),
+                        child: Icon(
+                          CupertinoIcons.ellipsis,
+                          color: Colors.black,
+                          size: 30.0,
+                        ),
+                      ),
+                    )
+                  ],
+                  flexibleSpace: ClipRect(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                      child: Container(
+                        padding: EdgeInsets.only(top: 8.0),
+                        width: double.infinity,
+                        height: double.infinity,
+                        decoration: new BoxDecoration(
+                          color: Colors.white.withOpacity(0.25),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 SliverList(
@@ -135,58 +196,73 @@ class _MainState extends State<Main> {
                   ),
                 ),
                 SliverAppBar(
-                  backgroundColor: Colors.white,
+                  automaticallyImplyLeading: false,
+                  leading: null,
+                  centerTitle: true,
+                  backgroundColor: Colors.transparent,
                   elevation: 0.0,
                   pinned: true,
                   bottom: PreferredSize(
-                    preferredSize: Size.fromHeight(42.0),
+                    preferredSize: Size.fromHeight(48.0),
                     child: _isLoading ? Container() : Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: new Column(
-                        children: <Widget>[
-                          Text(
-                            'in Jakarta, Indonesia',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ],
+                      padding: EdgeInsets.all(30.0),
+                      child: Text(
+                        'Edit',
+                        style: TextStyle(color: CupertinoColors.activeBlue),
                       ),
                     ),
                   ),
                   flexibleSpace: FlexibleSpaceBar(
-                    background: ClipRect(
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-                        child: Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          decoration: new BoxDecoration(
-                            color: Colors.grey.shade200.withOpacity(0.5),
+                    title: _isLoading
+                        ? Container()
+                        : ClipRect(
+                            child: BackdropFilter(
+                              filter:
+                                  ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                              child: new Center(
+                                child: Container(
+                                  padding: EdgeInsets.only(top: 20.0),
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  decoration: new BoxDecoration(
+                                    color: Colors.white.withOpacity(0.35),
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Text(
+                                        'UX Designer',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(color: Colors.black54),
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          'in Jakarta, Indonesia',
+                                          style:
+                                              TextStyle(color: Colors.black54),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                    title: _isLoading ? Container() : Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'UX Designer',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ),
                   ),
                 ),
                 SliverList(
                   delegate: SliverChildListDelegate(
-                    _isLoading ? [] : [
-                      Padding(padding: EdgeInsets.only(top: 60.0)),
-                      Vacancy(0),
-                      Vacancy(1),
-                      Vacancy(2),
-                    ],
+                    _isLoading
+                        ? []
+                        : [
+                            Vacancy(0),
+                            Vacancy(1),
+                            Vacancy(2),
+                          ],
                   ),
                 ),
               ],
             ),
-            CustomAppBar(_showBottomSheetCallback),
+//            CustomAppBar(_showBottomSheetCallback),
             FrostedOverlay(_bottomSheetIsOpened, _dismissBottomSheet),
           ],
         ),
@@ -197,32 +273,36 @@ class _MainState extends State<Main> {
 
 class MockLoading extends StatelessWidget {
   final bool _isLoading;
+
   MockLoading(this._isLoading);
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return _isLoading ? Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30.0,
-          vertical: 20.0,
-        ),
-        child: Column(
-          children: <Widget>[
-            Text(
-              'Searching for UX Designer position near Jakarta, Indonesia',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey,
+    return _isLoading
+        ? Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 30.0,
+                vertical: 20.0,
+              ),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'Searching for UX Designer position near Jakarta, Indonesia',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 40.0)),
+                  CircularProgressIndicator(
+                    backgroundColor: Colors.grey,
+                  ),
+                ],
               ),
             ),
-            Padding(padding: EdgeInsets.only(top: 40.0)),
-            CircularProgressIndicator(
-              backgroundColor: Colors.grey,
-            ),
-          ],
-        ),
-      ),
-    ) : Container();
+          )
+        : Container();
   }
 }
