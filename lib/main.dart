@@ -200,6 +200,7 @@ class _MainState extends State<Main> {
               pinned: true,
               backgroundColor: Colors.transparent,
               elevation: 0.0,
+              leading: Container(),
               flexibleSpace: _isLoading
                   ? Container()
                   : ClipRect(
